@@ -1,7 +1,7 @@
 <div align="center">
 
 ![AI-CAD logo](assets/AICAD-org_logo.png)
-# AI-CAD Labs : 
+# AI-CAD Labs
 
 </div>
 

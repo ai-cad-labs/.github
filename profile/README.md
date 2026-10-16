@@ -49,11 +49,16 @@ AI-CAD is built on top of your **coding-agent**.
 
 <div align="center">
 
-![The AI-CAD live dashboard after the impeller run: project header with make/buy part counts, revision and conflict counters, part cards with render thumbnails, and the agent activity waterfall](assets/dashboard.png)
+![The AI-CAD live dashboard after the conveyor shaft unit run: project header reading 3 make parts and 6 catalogue lines (9 line items in the bill of materials once washers and nuts are split out), revision and conflict counters, three part cards with isometric render thumbnails and PASSED verdicts, six catalogue-part cards with quantities, and the agent activity waterfall](assets/dashboard.png)
 
 _Your engineering department at work:
 parts land as agents deliver, verdicts post,
-and the [activity waterfall](#live-dashboard) traces every agent in real time._
+and the [activity waterfall](#live-dashboard) traces every agent in real time.
+(This and the drawing-sheet views below are from the
+[`conveyor_shaft_unit`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/conveyor_shaft_unit) run,
+a two-bearing shaft support unit designed from one paragraph of text;
+the shaded cover image further down is the
+[`impeller_assembly`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/impeller_assembly) run.)_
 
 </div>
 
@@ -144,10 +149,12 @@ and follow its [quickstart](https://github.com/ai-cad-labs/ai-cad#get-exploring-
 
 <div align="center">
 
-![The impeller part page in the dashboard: engineering views of the backswept impeller with its validation verdict and DFMA findings](assets/impeller-4view.png)
+![The housing part page in the dashboard: top, isometric, front and right engineering views of a cast two-bore bearing housing with a four-bolt foot and two grease bosses, with its PASSED validation stamp](assets/housing-4view.png)
 
 _Eight views per part, judged like a drawing sheet:
-this is what the vision evaluator sees before any geometry ships._
+this is what the vision evaluator sees before any geometry ships.
+The part is the grey-iron housing of the conveyor shaft unit;
+its bores, shoulders, wall and bolt pattern were each measured on the solid._
 
 </div>
 
@@ -159,11 +166,11 @@ this is what the vision evaluator sees before any geometry ships._
 
 <div align="center">
 
-![The dashboard's assembly page after the impeller run: the full assembly in four colored engineering views (top, iso, front, right) with a per-part color legend and the agent activity waterfall](assets/assembly-4view.png)
+![The dashboard's assembly page after the conveyor shaft unit run: the full 17-component assembly in four colored engineering views (top, iso, front, right) with a per-part color legend and the agent activity waterfall](assets/assembly-4view.png)
 
-_2 hours of autonomous design, traced live:
+_Three hours of autonomous design, traced live:
 the agent waterfall above,
-the assembly taking shape in four engineering views._
+the shaft, housing, cover, two bearings and twelve fasteners taking shape in four engineering views._
 
 </div>
 
@@ -185,6 +192,7 @@ No geometry there was human-authored.
 | Run | What it built | The numbers | Wall clock |
 |---|---|---|---|
 | [`impeller_assembly`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/impeller_assembly) | A belt-driven centrifugal compressor core, from a hand-drawn sketch ([the case study](#case-study)) | 6 components (3 designed, 3 catalog) · 0.8000 mm clearance measured five ways · 6 backswept blades at 10.5° · reviewer verdict: ship | ~2h12m |
+| [`conveyor_shaft_unit`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/conveyor_shaft_unit) | A two-bearing conveyor shaft support unit, from one paragraph of text ([the second case study](#case-study-2)) | 3 designed parts right first time · 9 catalogue items · 136-pair interference sweep · 0 valid gate rejections · reviewer verdict: ship, then downgraded by the run's own verification to pause-for-human with three installation defects named | ~3h after planning (5h31m total, 1h55m lost to a bad network link) |
 | [`piston_crank`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/piston_crank) | The 5-part IC-engine core at top-dead-center | 7-instance assembly · a locked dimension chain that held end-to-end · mid-run self-checkpoint and cold resume | 71.3 min |
 | [`spur_gear`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/spur_gear) | A meshing involute gear pair | Deterministic mesh proof: 0.00 mm³ interference at the correct half-tooth phase · 0 repair cycles | ~49.8 min |
 | [`treasure_chest`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/treasure_chest) | The control baseline: a 4-part chest | 13 agents, 0 failures, 0 repairs · 3 findings deferred with written reasoning | 32.8 min |
@@ -252,6 +260,70 @@ is public:
 [`run_reflection.md`](https://github.com/ai-cad-labs/ai-cad-example-projects/blob/main/impeller_assembly/run_reflection.md).
 
 [Read the full exhibit](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/impeller_assembly) | [Browse all runs](https://github.com/ai-cad-labs/ai-cad-example-projects)
+
+</details>
+
+<a name="case-study-2"></a>
+
+<details>
+<summary>
+<h2>Case Study : Conveyor Shaft Unit : the run that caught itself</h2>
+
+<div align="center">
+
+![A two-bearing shaft support unit in shaded isometric: grey-iron housing with two in-line bores, a four-bolt foot and two grease bosses in red, the bolted seal cover in green, the turned shaft in blue](assets/conveyor-iso-filled.png)
+
+**Designed end-to-end from one paragraph of text, no sketch:**
+_a 40 mm conveyor shaft on two 6208 bearings in a cast two-bore housing with a bolted seal cover,
+rendered from the design run's assembly geometry._
+
+Details: the [`conveyor_shaft_unit`](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/conveyor_shaft_unit) run in the public gallery.
+
+</div>
+
+</summary>
+
+The impeller shows the system defending the user against its tooling.
+This run shows the other half of a manufacturing gate with judgment:
+clean work, and then the system refusing to call it finished.
+Every claim below is on file in the exhibit.
+
+The brief was one paragraph:
+shaft diameter, speed, loads, service life, bearing size, fits, chamfers, a minimum wall, a grease nipple reachable from above.
+
+- **Three parts, right first time, and no repair loop.**
+  The shaft, the housing and the cover each executed on the first attempt
+  (each from one closed profile the lead engineer agent resolved from the plan);
+  the two repairs in the whole run were one-constant changes,
+  the regression gate never validly rejected anything, and no two agents conflicted.
+  Every dimension the brief named was measured on the finished solid:
+  Ø40.000 seats, Ø80.000 bores on one axis, an 18.000 mm bearing clamp, 1.500 mm of float, an 8 mm wall 99.7 % intact.
+- **Sourcing found what geometry cannot.**
+  Catalogue arithmetic put the specified bearing's life at 14,094 hours against the 20,000 the brief asked.
+  The system kept the customer's bearing, costed three resolutions and marked the question for a human
+  rather than silently moving a number the brief had fixed.
+- **A clash found by asymmetry, fixed with one constant, defended against a faulty checker.**
+  The interference sweep found a flange clipping two foot-bolt heads by 6.4 mm³ while the mirror pair read exactly zero.
+  One constant fixed it.
+  The regression gate then rejected the fix after comparing the proposal against itself;
+  the lead engineer overrode the verdict on four measured grounds and re-proved the fix from independent code.
+- **Then it caught itself.**
+  The sign-off reviewer said ship.
+  The manufacturing review, still running, came back with two installation defects;
+  the run's own verification pass confirmed both from scratch,
+  found a third by questioning its own first draft
+  (the brief's 1 mm chamfer cannot seat a bearing with a 1.1 mm corner radius),
+  and downgraded the verdict in writing, with the numbers.
+
+A system that can say "not yet" with evidence is worth more to a workshop than one that only says yes.
+The full record, downgrade included, is public and unedited:
+
+  3 designed parts, 9 catalogue items,
+  fifteen agent spawns in one session,
+  two repair cycles, zero valid gate rejections,
+  reviewer verdict: ship; effective status: pause for a human, three defects named.
+
+[Read the full exhibit](https://github.com/ai-cad-labs/ai-cad-example-projects/tree/main/conveyor_shaft_unit) | [Browse all runs](https://github.com/ai-cad-labs/ai-cad-example-projects)
 
 </details>
 
